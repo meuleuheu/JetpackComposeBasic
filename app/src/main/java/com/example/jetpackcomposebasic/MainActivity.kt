@@ -7,14 +7,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -91,13 +96,67 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     }
 }
 
+// No.2
+@Composable
+fun Greeting2(name: String, modifier: Modifier) {
+//    Box {
+//        Row(Modifier
+//            .background(color = Color.LightGray)
+//            .fillMaxWidth()
+//            .height(200.dp)
+//            , horizontalArrangement = Arrangement.SpaceBetween
+//            , Alignment.CenterVertically
+//        ) {
+//            BaseItem2(Modifier.background(Color.Red).align(Alignment.Top))
+//            BaseItem(Color.Green)
+//            BaseItem2(Modifier
+//                .background(Color.Blue)
+//                .align(Alignment.Bottom)
+//                .size(50.dp))
+//        }
+//    }
+
+    Box {
+        Column(Modifier
+            .background(color = Color.LightGray)
+            .fillMaxWidth()
+            .height(500.dp)
+            , verticalArrangement = Arrangement.SpaceBetween
+            , Alignment.CenterHorizontally
+        ) {
+            BaseItem2(Modifier.background(Color.Red).align(Alignment.Start))
+            BaseItem(Color.Green)
+            BaseItem2(Modifier
+                .background(Color.Blue)
+                .align(Alignment.End)
+                .size(50.dp))
+        }
+    }
+}
+
+@Composable
+fun BaseItem(color: Color) {
+    Box(modifier = Modifier
+        .size(100.dp)
+        .background(color))
+}
+
+@Composable
+fun BaseItem2(modifier: Modifier) {
+    Box(modifier = modifier
+        .size(100.dp))
+}
+// No.2
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Greeting(
-            name = "Android",
-            modifier = Modifier.padding(innerPadding)
-        )
+    JetpackComposeBasicTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Greeting2("Android", modifier = Modifier)
+        }
     }
 }
