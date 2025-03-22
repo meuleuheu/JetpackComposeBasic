@@ -24,11 +24,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -38,10 +45,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -57,11 +67,16 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -340,6 +355,80 @@ fun Greeting7(name: String, modifier: Modifier) {
 }
 // No.7 end
 
+// No.8
+@Composable
+fun Greeting8(name: String, modifier: Modifier) {
+    Column {
+        TextField1()
+        TextField2()
+    }
+}
+
+@Composable
+fun TextField1() {
+    Log.i("TAG", "TextField1")
+    var text by remember { mutableStateOf("") }
+
+    TextField(value = text,
+        onValueChange = {
+            text = it
+            Log.i("TAG", "onValueChange1: $text")
+        },
+        label = { Text("Label") },
+        textStyle = TextStyle(color = Color.Blue),
+        supportingText = { Icon(Icons.Default.Info, contentDescription = null)},
+        placeholder = { Text("placeholder") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null)},
+        trailingIcon = {
+            IconButton(onClick = {}) {
+                Icon(Icons.Default.Clear, contentDescription = null)
+            }
+        },
+        colors = TextFieldDefaults.colors(
+            focusedLabelColor = Color.Red,
+            unfocusedContainerColor = Color.Green,
+            focusedContainerColor = Color.Green,
+            errorContainerColor = Color.Green,
+            disabledContainerColor = Color.Green,
+            unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+        prefix = { Text("Mr ")},    //>< suffix
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Decimal,
+            imeAction = ImeAction.Send
+        ),
+        keyboardActions = KeyboardActions(
+            onSend = { Log.i("TAG", "sent: $text")}
+        )
+    )
+}
+
+@Composable
+fun TextField2() {
+    Log.i("TAG", "TextField2")
+    var text by remember { mutableStateOf("") }
+    var isShowPassword by remember { mutableStateOf(false) }
+    OutlinedTextField(value = text,
+        onValueChange = {
+            text = it
+            Log.i("TAG", "onValueChange2: $text")
+        },
+        label = { Text("Label") },
+        trailingIcon = {
+            IconButton(onClick = { isShowPassword = !isShowPassword}) {
+                Icon(Icons.Default.Check, contentDescription = null)
+            }
+        },
+        visualTransformation = if (isShowPassword) VisualTransformation.None
+        else PasswordVisualTransformation()
+    )
+}
+// No.8 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -348,7 +437,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting7("Android", modifier = Modifier)
+            Greeting8("Android", modifier = Modifier)
         }
     }
 }
