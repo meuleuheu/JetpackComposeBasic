@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
@@ -22,6 +23,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
@@ -429,6 +434,119 @@ fun TextField2() {
 }
 // No.8 end
 
+// No.9
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun Greeting9_1(name: String, modifier: Modifier) {
+    var list = listOf("a", "b", "c", "d", "e", "f", "g", "h")
+    Column {
+        LazyColumn(
+            contentPadding = PaddingValues(10.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            //        horizontalAlignment = Alignment.CenterHorizontally,
+            //        reverseLayout = true,
+            //        userScrollEnabled = false
+            modifier = Modifier.weight(1f)
+        ) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(10.dp)
+                        .background(color = Color.Red),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Header")
+                }
+            }
+
+            items(list.size) {
+                Box(
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(10.dp)
+                        .background(color = Color.Green),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = list[it])
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(10.dp)
+                        .background(color = Color.Blue),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Footer")
+                }
+            }
+        }
+
+        LazyColumn(
+            contentPadding = PaddingValues(10.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            //        horizontalAlignment = Alignment.CenterHorizontally,
+            //        reverseLayout = true,
+            //        userScrollEnabled = false
+            modifier = Modifier.weight(1f)
+        ) {
+            for (i in 0..2) {
+                stickyHeader {
+                    Box(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(10.dp)
+                            .background(color = Color.Red),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Header $i")
+                    }
+                }
+
+                items(list.size) {
+                    Box(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(10.dp)
+                            .background(color = Color.Green),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = list[it])
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Greeting9_2(name: String, modifier: Modifier) {
+    var list = listOf("a", "b", "c", "d", "e", "f", "g", "h")
+    LazyVerticalGrid(
+//        columns = GridCells.Fixed(2), // fix size 2
+        columns = GridCells.FixedSize(100.dp),  // moi cot la 100dp
+        contentPadding = PaddingValues(10.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        items(list) {
+            Box(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp)
+                    .background(color = Color.Green),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = it)
+            }
+        }
+    }
+}
+// No.9 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -437,7 +555,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting8("Android", modifier = Modifier)
+            Greeting9_2("Android", modifier = Modifier)
         }
     }
 }
