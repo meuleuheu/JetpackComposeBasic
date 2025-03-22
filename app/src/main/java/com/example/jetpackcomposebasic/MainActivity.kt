@@ -1,6 +1,7 @@
 package com.example.jetpackcomposebasic
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -43,8 +44,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -311,6 +314,32 @@ fun Greeting6(name: String, modifier: Modifier) {
 }
 // No.6 end
 
+// No.7
+@Composable
+fun Greeting7(name: String, modifier: Modifier) {
+    var countTest = 0
+//    var count by remember { mutableStateOf(0) }   // ko luu gia tri khi xoay man hinh
+    var count by rememberSaveable { mutableStateOf(0) }
+    val history = remember { mutableStateListOf<Int>() }    // ko dung duoc statelist voi rememberSaveable
+    Log.i("TAG", "Greeting7: count = $count")
+    Column {
+        Text("$count")
+        Button(onClick = {
+            count++
+            countTest++
+            history.add(count)
+            Log.i("TAG", "onClick: $count | $countTest")
+        }) {
+            Text("+")
+        }
+        Text("History: ")
+        for (value in history.toList()) {
+            Text("$value")
+        }
+    }
+}
+// No.7 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -319,7 +348,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting6("Android", modifier = Modifier)
+            Greeting7("Android", modifier = Modifier)
         }
     }
 }
