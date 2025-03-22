@@ -14,6 +14,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,12 +22,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +52,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
@@ -264,6 +279,38 @@ fun Greeting5(name: String, modifier: Modifier) {
 }
 // No.5 end
 
+// No.6
+@Composable
+fun Greeting6(name: String, modifier: Modifier) {
+    Column {
+        Button(onClick = {/* TODO */}, border = BorderStroke(2.dp, color = Color.Red),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta)
+        ) {
+            Text("Button")
+            Icon(Icons.Filled.Favorite, "Favorite")
+        }
+        FilledTonalButton(onClick = { /* TODO */}, contentPadding = PaddingValues(30.dp), enabled = false) {
+            Text("FilledTonalButton")
+        }
+        ElevatedButton(onClick = {/* TODO */}, elevation = ButtonDefaults.buttonElevation(defaultElevation = 20.dp)) {
+            Text("ElevatedButton")
+        }
+        OutlinedButton(onClick = { /* TODO */},
+            shape = CutCornerShape(15.dp) //RoundedCornerShape(10.dp), RectangleShape
+        ) {
+            Text("OutlinedButton")
+        }
+        TextButton(onClick = { /* TODO */},
+            modifier = Modifier.shadow(elevation = 2.dp, shape = CircleShape)) {
+            Text("TextButton")
+        }
+        IconButton(onClick = { /* TODO */}) {
+            Icon(Icons.Filled.Favorite, "Favorite")
+        }
+    }
+}
+// No.6 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -272,7 +319,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting5("Android", modifier = Modifier)
+            Greeting6("Android", modifier = Modifier)
         }
     }
 }
