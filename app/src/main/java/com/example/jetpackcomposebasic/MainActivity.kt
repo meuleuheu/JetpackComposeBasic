@@ -148,6 +148,21 @@ fun BaseItem2(modifier: Modifier) {
 }
 // No.2
 
+// No.3
+@Composable
+fun Greeting3(name: String, modifier: Modifier) {
+    Box {
+        Row(modifier = Modifier.fillMaxWidth().height(200.dp).background(Color.LightGray)
+            , Arrangement.SpaceAround
+            , verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(100.dp).background(Color.Red).weight(1f, false))
+            Box(Modifier.size(150.dp).background(Color.Green).weight(1f, false))
+            Box(Modifier.size(100.dp).background(Color.Blue).weight(1f))
+        }
+    }
+}
+// No.3 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -156,7 +171,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting2("Android", modifier = Modifier)
+            Greeting3("Android", modifier = Modifier)
         }
     }
 }
