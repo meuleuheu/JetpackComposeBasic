@@ -35,10 +35,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.jetpackcomposebasic.ui.theme.JetpackComposeBasicTheme
 
 class MainActivity : ComponentActivity() {
@@ -211,6 +223,47 @@ fun Greeting4_2(name: String, modifier: Modifier) {
 }
 // No.4 end
 
+// No.5
+val playfairFont = FontFamily(
+    Font(R.font.playfair_display_medium, weight = FontWeight.Medium),
+    Font(R.font.playfair_display_bold_italic, weight = FontWeight.Bold,
+        style = FontStyle.Italic
+    )
+)
+@Composable
+fun Greeting5(name: String, modifier: Modifier) {
+    Box {
+//        Text("Ngay mai ra sao chang ai biet truoc" +
+//        "nen moi khi co co hoi" +
+//        "toi deu muon ngam nhin ban lau hon mot chut",
+        Text(
+            buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Green)) {
+                    append("He")
+                }
+                append("llo")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Red)) {
+                    append(" Wor")
+                }
+                append("ld")
+            },
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            //softWrap = false,   //ko muon xuong dong
+            fontSize = 40.sp,
+            fontWeight = FontWeight.W700,
+            fontFamily = FontFamily.Serif,
+            fontStyle = FontStyle.Italic,
+            textDecoration = TextDecoration.Underline,
+            color = Color.Blue,
+            modifier = modifier.background(Color.Yellow)
+//                .rotate(90f)
+        )
+    }
+}
+// No.5 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -219,7 +272,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting4_1("Android", modifier = Modifier)
+            Greeting5("Android", modifier = Modifier)
         }
     }
 }
