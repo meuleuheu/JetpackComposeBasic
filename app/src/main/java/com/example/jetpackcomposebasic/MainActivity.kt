@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,18 +41,27 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -196,7 +206,9 @@ fun Greeting2(name: String, modifier: Modifier) {
             , verticalArrangement = Arrangement.SpaceBetween
             , Alignment.CenterHorizontally
         ) {
-            BaseItem2(Modifier.background(Color.Red).align(Alignment.Start))
+            BaseItem2(Modifier
+                .background(Color.Red)
+                .align(Alignment.Start))
             BaseItem(Color.Green)
             BaseItem2(Modifier
                 .background(Color.Blue)
@@ -224,12 +236,24 @@ fun BaseItem2(modifier: Modifier) {
 @Composable
 fun Greeting3(name: String, modifier: Modifier) {
     Box {
-        Row(modifier = Modifier.fillMaxWidth().height(200.dp).background(Color.LightGray)
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .background(Color.LightGray)
             , Arrangement.SpaceAround
             , verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.size(100.dp).background(Color.Red).weight(1f, false))
-            Box(Modifier.size(150.dp).background(Color.Green).weight(1f, false))
-            Box(Modifier.size(100.dp).background(Color.Blue).weight(1f))
+            Box(Modifier
+                .size(100.dp)
+                .background(Color.Red)
+                .weight(1f, false))
+            Box(Modifier
+                .size(150.dp)
+                .background(Color.Green)
+                .weight(1f, false))
+            Box(Modifier
+                .size(100.dp)
+                .background(Color.Blue)
+                .weight(1f))
         }
     }
 }
@@ -241,17 +265,26 @@ fun Greeting4_1(name: String, modifier: Modifier) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         Row(Modifier.horizontalScroll(rememberScrollState())) {
             repeat(10) {
-                Box(Modifier.size(100.dp).padding(10.dp).background(Color.Green))
+                Box(Modifier
+                    .size(100.dp)
+                    .padding(10.dp)
+                    .background(Color.Green))
             }
         }
 
         repeat(10) {
-            Box(Modifier.size(100.dp).padding(10.dp).background(Color.Green))
+            Box(Modifier
+                .size(100.dp)
+                .padding(10.dp)
+                .background(Color.Green))
         }
 
         Row(Modifier.horizontalScroll(rememberScrollState())) {
             repeat(10) {
-                Box(Modifier.size(100.dp).padding(10.dp).background(Color.Green))
+                Box(Modifier
+                    .size(100.dp)
+                    .padding(10.dp)
+                    .background(Color.Green))
             }
         }
     }
@@ -631,6 +664,78 @@ fun Greeting10(name: String, modifier: Modifier) {
 
 // No.10 end
 
+// No.11
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Greeting11(name: String, modifier: Modifier) {
+    var isExpanded by remember { mutableStateOf(false) }
+    var isExpanded2 by remember { mutableStateOf(false) }
+    var text by remember { mutableStateOf("") }
+    Column {
+        Row {
+            Spacer(Modifier.weight(1f))
+            IconButton(onClick = { isExpanded = !isExpanded } ) {
+                Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
+                DropdownMenu(expanded = isExpanded, onDismissRequest = { !isExpanded }) {
+                    DropdownMenuItem(
+                        text = { Text("Refresh") },
+                        onClick = { isExpanded = false },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = null
+                            )
+                        }
+                    )
+                    HorizontalDivider()
+                    DropdownMenuItem(
+                        text = { Text("Setting") },
+                        onClick = { isExpanded = false},
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
+            }
+            Spacer(Modifier.weight(1f))
+        }
+
+        ExposedDropdownMenuBox(
+            expanded = isExpanded2,
+            onExpandedChange = { isExpanded2 = !isExpanded2 }
+        ) {
+            TextField(
+                value = text,
+                onValueChange = {},
+                modifier = Modifier.menuAnchor(),
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded2)
+                }
+            )
+
+            ExposedDropdownMenu(
+                expanded = isExpanded2,
+                onDismissRequest = { !isExpanded2 }
+            ) {
+                for (i in 0..2) {
+                    DropdownMenuItem(
+                        text = { Text(text = "Choose $i") },
+                        onClick = {
+                            isExpanded2 = false
+                            text = "$i"
+                        }
+                    )
+                }
+            }
+        }
+        Box(Modifier.background(Color.Red).fillMaxSize())
+    }
+}
+// No.11 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -639,7 +744,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting10("Android", modifier = Modifier)
+            Greeting11("Android", modifier = Modifier)
         }
     }
 }
