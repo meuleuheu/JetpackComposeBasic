@@ -12,6 +12,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
@@ -39,8 +43,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -53,6 +59,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -62,6 +70,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -71,6 +80,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -90,6 +100,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackcomposebasic.ui.theme.JetpackComposeBasicTheme
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -547,6 +559,78 @@ fun Greeting9_2(name: String, modifier: Modifier) {
 }
 // No.9 end
 
+// No.10
+data class TabItem(val text: String, val icon: ImageVector, val screen: @Composable () -> Unit)
+
+@Composable
+fun HomeScreen() {
+    Box(
+        modifier = Modifier
+            .background(Color.Red)
+            .fillMaxSize()
+        , contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Home Screen")
+    }
+}
+
+@Composable
+fun SettingScreen() {
+    Box(
+        modifier = Modifier
+            .background(Color.Green)
+            .fillMaxSize()
+        , contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Setting Screen")
+    }
+}
+
+@Composable
+fun Greeting10(name: String, modifier: Modifier) {
+    var tabIndex by remember { mutableStateOf(0) }
+    var tabs = listOf(
+        TabItem("Home", Icons.Default.Home, {
+            HomeScreen()
+        }),
+        TabItem("Setting", Icons.Default.Settings, {
+            SettingScreen()
+        })
+    )
+    var pagerState = rememberPagerState(
+        pageCount = { tabs.size }
+    )
+    var coroutineScope = rememberCoroutineScope()
+    Log.i("TAG", "animateScrollToPage $tabIndex")
+    Column {
+        TabRow(selectedTabIndex = tabIndex) {
+            tabs.forEachIndexed { index, tabItem ->
+                Tab(text = { Text(tabItem.text) },
+                    icon = { Icon(tabItem.icon, contentDescription = null)},
+                    selected = tabIndex == index,
+                    onClick = {
+                        coroutineScope.launch {
+                            Log.i("TAG", "animateScrollToPage $index")
+                            tabIndex = index
+                            pagerState.animateScrollToPage(index)
+                            //pagerState.scrollToPage(index)
+                        }
+                    })
+            }
+        }
+        //https://m3.material.io/components/navigation-bar/overview
+        //https://m3.material.io/components/navigation-drawer/overview
+        //https://m3.material.io/components/navigation-rail/overview
+
+        HorizontalPager(state = pagerState) {
+            tabs[it].screen
+        }
+//        VerticalPager
+    }
+}
+
+// No.10 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -555,7 +639,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting9_2("Android", modifier = Modifier)
+            Greeting10("Android", modifier = Modifier)
         }
     }
 }
