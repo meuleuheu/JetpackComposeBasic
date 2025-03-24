@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
@@ -101,6 +102,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -788,6 +791,37 @@ fun Greeting12(name: String, modifier: Modifier) {
 }
 // No.12 end
 
+// No.13
+@Composable
+fun Greeting13(name: String, modifier: Modifier) {
+    Column(modifier.background(Color.LightGray)) {
+        Image(
+            painter = painterResource(R.drawable.screen),
+            contentDescription = null,
+            modifier = Modifier.size(150.dp)
+                .background(Color.Red)
+                .clip(shape = CircleShape)
+                .border(BorderStroke(2.dp, Color.Yellow), CircleShape),
+            contentScale = ContentScale.Crop
+        )
+
+        Image(
+            painter = painterResource(R.drawable.setting),
+            contentDescription = null,
+            modifier = Modifier.size(150.dp).background(Color.Blue)
+        )
+
+        Image(
+            painter = painterResource(R.drawable.home),
+            contentDescription = null,
+            modifier = Modifier.size(150.dp).background(Color.Green)
+        )
+
+        // Coil, Glide
+    }
+}
+// No.13 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -796,7 +830,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting12("Android", modifier = Modifier)
+            Greeting13("Android", modifier = Modifier)
         }
     }
 }
