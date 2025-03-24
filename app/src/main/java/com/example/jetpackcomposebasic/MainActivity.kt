@@ -54,6 +54,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.sharp.Delete
 import androidx.compose.material.icons.sharp.Favorite
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -75,6 +77,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
@@ -822,7 +825,66 @@ fun Greeting13(name: String, modifier: Modifier) {
 }
 // No.13 end
 
-@Preview(showBackground = true)
+// No.14
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Greeting14(name: String, modifier: Modifier) {
+    var openAlertDialog by remember { mutableStateOf(false) }
+    var openBottomSheet by remember { mutableStateOf(false) }
+    Column {
+        ElevatedButton(onClick = { openAlertDialog = true }) {
+            Text(text = "Open AlertDialog")
+        }
+        ElevatedButton(onClick = { openBottomSheet = true}) {
+            Text(text = "Open BottomSheet")
+        }
+    }
+
+    if (openAlertDialog) {
+        AlertDialog(
+            onDismissRequest = { openAlertDialog = false },
+            title = { Text("Title") },
+            text = { Text("Text") },
+            confirmButton = {
+                ElevatedButton(onClick = { openAlertDialog = false }) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                ElevatedButton(onClick = { openAlertDialog = false }) {
+                    Text("Dismiss")
+                }
+            }
+        )
+    }
+
+    if (openBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { openBottomSheet = false },
+            shape = BottomSheetDefaults.HiddenShape,
+            scrimColor = Color.Cyan,
+            containerColor = Color.Magenta
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(text = "ModalBottomSheet")
+                Row {
+                    ElevatedButton(onClick = { openBottomSheet = false }, modifier = Modifier.weight(1f)) {
+                        Text(text = "Done")
+                    }
+                    ElevatedButton(onClick = { openBottomSheet = false }, modifier = Modifier.weight(1f)) {
+                        Text(text = "Close")
+                    }
+                }
+
+            }
+        }
+    }
+}
+// No.14 end
+
+// https://m3.material.io/components
+
+@Preview(showBackground = true, heightDp = 500)
 @Composable
 fun GreetingPreview() {
     JetpackComposeBasicTheme {
@@ -830,7 +892,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting13("Android", modifier = Modifier)
+            Greeting14("Android", modifier = Modifier)
         }
     }
 }
