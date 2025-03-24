@@ -50,13 +50,19 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.sharp.Delete
+import androidx.compose.material.icons.sharp.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -64,8 +70,12 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemColors
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -736,6 +746,48 @@ fun Greeting11(name: String, modifier: Modifier) {
 }
 // No.11 end
 
+// No.12
+@Composable
+fun Greeting12(name: String, modifier: Modifier) {
+    Column {
+        Card (
+            Modifier.padding(16.dp).fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(4.dp),   // do bong
+            colors = CardDefaults.cardColors(Color.Yellow),
+            border = BorderStroke(2.dp, color = Color.Green)
+        ) {
+            Text(text = "Hello", Modifier.padding(8.dp))
+            ListItem(
+                leadingContent = { Icon(imageVector = Icons.Sharp.Delete, contentDescription = null) },
+//                overlineContent = { Text("overlineContent") },
+                headlineContent = { Text("headlineContent") },
+                trailingContent = { Icon(imageVector = Icons.Rounded.Favorite, contentDescription = null) },
+                supportingContent = { Text("supportingContent")},
+                colors = ListItemDefaults.colors(Color.Cyan)
+            )
+        }
+
+        Card (
+            Modifier.padding(16.dp).fillMaxWidth()
+        ) {
+            Text(text = "Hello", Modifier.padding(8.dp))
+        }
+
+        ElevatedCard (
+            Modifier.padding(16.dp).fillMaxWidth()
+        ) {
+            Text(text = "Hello", Modifier.padding(8.dp))
+        }
+
+        OutlinedCard (
+            Modifier.padding(16.dp).fillMaxWidth()
+        ) {
+            Text(text = "Hello", Modifier.padding(8.dp))
+        }
+    }
+}
+// No.12 end
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -744,7 +796,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting11("Android", modifier = Modifier)
+            Greeting12("Android", modifier = Modifier)
         }
     }
 }
