@@ -61,6 +61,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -76,6 +77,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
@@ -84,7 +86,10 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -112,6 +117,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -978,6 +984,45 @@ fun Greeting15(name: String, modifier: Modifier) {
 }
 // No.15 end
 
+// No.16
+@Composable
+fun Greeting16(name: String, modifier: Modifier) {
+    var sliderPosition by remember { mutableStateOf(0f) }
+    var sliderPosition2 by remember { mutableStateOf(0.2f..0.6f) }
+    Column {
+        CircularProgressIndicator()
+        CircularProgressIndicator(
+            progress = 0.8f,
+            color = Color.Red,
+            trackColor = Color.Green,
+            strokeCap = StrokeCap.Round,
+            strokeWidth = 10.dp
+        )
+        LinearProgressIndicator()
+        Spacer(Modifier.height(20.dp))
+        LinearProgressIndicator(
+            progress = 0.8f,
+            color = Color.Red,
+            trackColor = Color.Green,
+            modifier = Modifier.height(20.dp)
+        )
+        Slider(
+            value = sliderPosition,
+            onValueChange = { sliderPosition = it },
+            valueRange = 0f..100f,
+            steps = 5,
+            colors = SliderDefaults.colors(thumbColor = Color.Red)
+        )
+        Text(text = "$sliderPosition")
+        RangeSlider(
+            value = sliderPosition2,
+            onValueChange = { sliderPosition2 = it },
+            valueRange = 0.1f..4f
+        )
+    }
+}
+// No.16 end
+
 // https://m3.material.io/components
 
 @Preview(showBackground = true)
@@ -988,7 +1033,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting15("Android", modifier = Modifier)
+            Greeting16("Android", modifier = Modifier)
         }
     }
 }
