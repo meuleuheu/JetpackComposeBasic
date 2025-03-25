@@ -61,6 +61,9 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -89,6 +92,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TimePickerLayoutType
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -747,7 +755,9 @@ fun Greeting11(name: String, modifier: Modifier) {
                 }
             }
         }
-        Box(Modifier.background(Color.Red).fillMaxSize())
+        Box(Modifier
+            .background(Color.Red)
+            .fillMaxSize())
     }
 }
 // No.11 end
@@ -757,7 +767,9 @@ fun Greeting11(name: String, modifier: Modifier) {
 fun Greeting12(name: String, modifier: Modifier) {
     Column {
         Card (
-            Modifier.padding(16.dp).fillMaxWidth(),
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(4.dp),   // do bong
             colors = CardDefaults.cardColors(Color.Yellow),
             border = BorderStroke(2.dp, color = Color.Green)
@@ -774,19 +786,25 @@ fun Greeting12(name: String, modifier: Modifier) {
         }
 
         Card (
-            Modifier.padding(16.dp).fillMaxWidth()
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
             Text(text = "Hello", Modifier.padding(8.dp))
         }
 
         ElevatedCard (
-            Modifier.padding(16.dp).fillMaxWidth()
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
             Text(text = "Hello", Modifier.padding(8.dp))
         }
 
         OutlinedCard (
-            Modifier.padding(16.dp).fillMaxWidth()
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
             Text(text = "Hello", Modifier.padding(8.dp))
         }
@@ -801,7 +819,8 @@ fun Greeting13(name: String, modifier: Modifier) {
         Image(
             painter = painterResource(R.drawable.screen),
             contentDescription = null,
-            modifier = Modifier.size(150.dp)
+            modifier = Modifier
+                .size(150.dp)
                 .background(Color.Red)
                 .clip(shape = CircleShape)
                 .border(BorderStroke(2.dp, Color.Yellow), CircleShape),
@@ -811,13 +830,17 @@ fun Greeting13(name: String, modifier: Modifier) {
         Image(
             painter = painterResource(R.drawable.setting),
             contentDescription = null,
-            modifier = Modifier.size(150.dp).background(Color.Blue)
+            modifier = Modifier
+                .size(150.dp)
+                .background(Color.Blue)
         )
 
         Image(
             painter = painterResource(R.drawable.home),
             contentDescription = null,
-            modifier = Modifier.size(150.dp).background(Color.Green)
+            modifier = Modifier
+                .size(150.dp)
+                .background(Color.Green)
         )
 
         // Coil, Glide
@@ -882,9 +905,82 @@ fun Greeting14(name: String, modifier: Modifier) {
 }
 // No.14 end
 
+// No.15
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Greeting15(name: String, modifier: Modifier) {
+    var datePickerState = rememberDatePickerState()
+    var datePickerState2 = rememberDatePickerState()
+    var showDatePickerDialog by remember { mutableStateOf(false) }
+
+    var timePickerState = rememberTimePickerState()
+    var timePickerState2 = rememberTimePickerState()
+    var showTimePickerDialog by remember { mutableStateOf(false) }
+    Column {
+        // date picker
+//        DatePicker(
+//            state = datePickerState,
+//            title = { Text("Title") },
+//            headline = { Text("Headline") },
+//            showModeToggle = true,
+//            colors = DatePickerDefaults.colors(weekdayContentColor = Color.Red)
+//        )
+//        Text(
+//            text = "Time picker = ${datePickerState.selectedDateMillis}",
+//            modifier = modifier
+//        )
+
+        // time picker
+        TimePicker(
+            state = timePickerState,
+            colors = TimePickerDefaults.colors(),
+            layoutType = TimePickerLayoutType.Vertical
+        )
+        Text(
+            text = "Time picker = ${timePickerState.hour} : ${timePickerState.minute}"
+        )
+
+        // date picker dialog
+        Button(onClick = { showDatePickerDialog = true }) {
+            Text(text = "Date Button")
+        }
+        if (showDatePickerDialog) {
+            DatePickerDialog(
+                onDismissRequest = {  },
+                confirmButton = {
+                    TextButton(onClick = { showDatePickerDialog = false }) {
+                        Text("Confirm")
+                    }
+                }
+            ) {
+                DatePicker(
+                    state = datePickerState2
+                )
+            }
+        }
+
+        // time picker dialog
+        Button(onClick = { showTimePickerDialog = true }) {
+            Text(text = "Time Button")
+        }
+        if (showTimePickerDialog) {
+            AlertDialog(
+                onDismissRequest = { showTimePickerDialog = false }
+            ) {
+                Surface {
+                    TimePicker(
+                        state = timePickerState2
+                    )
+                }
+            }
+        }
+    }
+}
+// No.15 end
+
 // https://m3.material.io/components
 
-@Preview(showBackground = true, heightDp = 500)
+@Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     JetpackComposeBasicTheme {
@@ -892,7 +988,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting14("Android", modifier = Modifier)
+            Greeting15("Android", modifier = Modifier)
         }
     }
 }
