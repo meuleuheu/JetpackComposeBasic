@@ -103,6 +103,8 @@ import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -140,8 +142,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackcomposebasic.ui.theme.JetpackComposeBasicTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
+import java.util.Timer
+import java.util.TimerTask
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -159,6 +164,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+const val TAG = "MainActivity"
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -416,14 +423,14 @@ fun Greeting7(name: String, modifier: Modifier) {
 //    var count by remember { mutableStateOf(0) }   // ko luu gia tri khi xoay man hinh
     var count by rememberSaveable { mutableStateOf(0) }
     val history = remember { mutableStateListOf<Int>() }    // ko dung duoc statelist voi rememberSaveable
-    Log.i("TAG", "Greeting7: count = $count")
+    Log.i(TAG, "Greeting7: count = $count")
     Column {
         Text("$count")
         Button(onClick = {
             count++
             countTest++
             history.add(count)
-            Log.i("TAG", "onClick: $count | $countTest")
+            Log.i(TAG, "onClick: $count | $countTest")
         }) {
             Text("+")
         }
@@ -446,13 +453,13 @@ fun Greeting8(name: String, modifier: Modifier) {
 
 @Composable
 fun TextField1() {
-    Log.i("TAG", "TextField1")
+    Log.i(TAG, "TextField1")
     var text by remember { mutableStateOf("") }
 
     TextField(value = text,
         onValueChange = {
             text = it
-            Log.i("TAG", "onValueChange1: $text")
+            Log.i(TAG, "onValueChange1: $text")
         },
         label = { Text("Label") },
         textStyle = TextStyle(color = Color.Blue),
@@ -482,20 +489,20 @@ fun TextField1() {
             imeAction = ImeAction.Send
         ),
         keyboardActions = KeyboardActions(
-            onSend = { Log.i("TAG", "sent: $text")}
+            onSend = { Log.i(TAG, "sent: $text")}
         )
     )
 }
 
 @Composable
 fun TextField2() {
-    Log.i("TAG", "TextField2")
+    Log.i(TAG, "TextField2")
     var text by remember { mutableStateOf("") }
     var isShowPassword by remember { mutableStateOf(false) }
     OutlinedTextField(value = text,
         onValueChange = {
             text = it
-            Log.i("TAG", "onValueChange2: $text")
+            Log.i(TAG, "onValueChange2: $text")
         },
         label = { Text("Label") },
         trailingIcon = {
@@ -664,7 +671,7 @@ fun Greeting10(name: String, modifier: Modifier) {
         pageCount = { tabs.size }
     )
     var coroutineScope = rememberCoroutineScope()
-    Log.i("TAG", "animateScrollToPage $tabIndex")
+    Log.i(TAG, "animateScrollToPage $tabIndex")
     Column {
         TabRow(selectedTabIndex = tabIndex) {
             tabs.forEachIndexed { index, tabItem ->
@@ -673,7 +680,7 @@ fun Greeting10(name: String, modifier: Modifier) {
                     selected = tabIndex == index,
                     onClick = {
                         coroutineScope.launch {
-                            Log.i("TAG", "animateScrollToPage $index")
+                            Log.i(TAG, "animateScrollToPage $index")
                             tabIndex = index
                             pagerState.animateScrollToPage(index)
                             //pagerState.scrollToPage(index)
@@ -1023,6 +1030,71 @@ fun Greeting16(name: String, modifier: Modifier) {
 }
 // No.16 end
 
+// No.17
+//https://developer.android.com/develop/ui/compose/side-effects
+@Composable
+fun Greeting17(name: String, modifier: Modifier) {
+    var isVisible by remember { mutableStateOf(true) }
+    Column {
+        TextButton(onClick = { isVisible = !isVisible }) {
+            Text(text = if (isVisible) "Hide" else "Show")
+        }
+    }
+//    if (isVisible) {
+//        Test()
+//    }
+    Test2(isVisible)
+}
+
+@Composable
+fun Test() {
+    Log.i(TAG, "start test")
+    var count by remember { mutableStateOf(0) }
+
+    LaunchedEffect(true) {
+        delay(1000)
+        Log.i(TAG, "LaunchedEffect true")
+    }
+    LaunchedEffect(Unit) {
+        delay(1500)
+        Log.i(TAG, "LaunchedEffect Unit")
+    }
+    LaunchedEffect(count) {
+        delay(500)
+        Log.i(TAG, "LaunchedEffect count = $count")
+    }
+
+    TextButton(onClick = { count++ }) {
+        Text(text = "count = $count")
+    }
+    Log.i(TAG, "end test")
+}
+
+@Composable
+fun Test2(isVisible: Boolean) {
+    Log.i(TAG, "start test 2")
+    var seconds by remember { mutableStateOf(0) }
+    Text("Show $isVisible")
+    DisposableEffect(key1 = isVisible) {
+        Log.i(TAG, "DisposableEffect")
+        val timer = Timer()
+        timer.schedule(object: TimerTask() {
+            override fun run() {
+                seconds++
+            }
+
+        }, 0, 2000)
+
+        onDispose {
+            Log.i(TAG, "onDispose")
+            timer.cancel()
+        }
+    }
+    Text(text = "Seconds: $seconds")
+    Log.i(TAG, "end test 2")
+}
+// No.17 end
+
 // https://m3.material.io/components
 
 @Preview(showBackground = true)
@@ -1033,7 +1105,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting16("Android", modifier = Modifier)
+            Greeting17("Android", modifier = Modifier)
         }
     }
 }
