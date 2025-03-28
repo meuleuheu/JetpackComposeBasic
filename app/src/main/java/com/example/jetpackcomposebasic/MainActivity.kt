@@ -8,13 +8,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,6 +58,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.sharp.Delete
 import androidx.compose.material.icons.sharp.Favorite
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
@@ -123,6 +128,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -1124,6 +1130,35 @@ fun Test2(isVisible: Boolean) {
 //}
 // No.18 end
 
+// No.19
+@Composable
+fun Greeting19(name: String, modifier: Modifier) {
+    Column {
+//        rememberRipple(color = Color.Green)
+        Box(
+            modifier = Modifier.size(300.dp)
+                .background(Color.Yellow)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = LocalIndication.current,
+                    onClick = {}
+                )
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onDoubleTap = {
+                            Log.i(TAG, "onDoubleTap $it")
+                        },
+                        onLongPress = {
+                            Log.i(TAG, "onLongPress $it")
+                        }
+                    )
+                }
+        )
+    }
+}
+
+// No.19 end
+
 // https://m3.material.io/components
 
 @Preview(showBackground = true)
@@ -1134,7 +1169,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting17("Android", modifier = Modifier)
+            Greeting19("Android", modifier = Modifier)
         }
     }
 }
