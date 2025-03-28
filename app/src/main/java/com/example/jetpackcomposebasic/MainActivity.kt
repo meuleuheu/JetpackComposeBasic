@@ -100,6 +100,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerLayoutType
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -121,6 +122,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -1094,6 +1096,33 @@ fun Test2(isVisible: Boolean) {
     Log.i(TAG, "end test 2")
 }
 // No.17 end
+
+// No.18
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun Greeting18(name: String, modifier: Modifier) {
+//    var count by remember { mutableStateOf(5) }
+//    val refreshState = rememberPullToRefreshState()
+//    if (refreshState.isRefreshing) {
+//        LaunchedEffect(true) {
+//            delay(1000)
+//            count += 5
+//            refreshState.endRefresh()
+//        }
+//    }
+//    Box(Modifier.nestedScroll(refreshState.nestedScrollConnection)) {
+//        LazyColumn(Modifier.fillMaxSize()) {
+//            items(count) {
+//                Text(text = "Item $it")
+//            }
+//            PullToRefreshContainer(
+//                state = refreshState,
+//                modifier = Modifier.align(Alignment.TopCenter)
+//            )
+//        }
+//    }
+//}
+// No.18 end
 
 // https://m3.material.io/components
 
