@@ -69,6 +69,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
@@ -101,6 +102,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
@@ -116,6 +118,7 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
@@ -143,6 +146,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -1254,6 +1258,34 @@ fun Greeting20(name: String, modifier: Modifier) {
 }
 // No.20 end
 
+// No.21
+@Composable
+fun Greeting21(name: String, modifier: Modifier) {
+    var checkedState by remember { mutableStateOf(false) }
+    var triState by remember { mutableStateOf(ToggleableState.Off) }
+
+    var radioOptions = listOf("A", "B", "C")
+    var selectedOption by remember { mutableStateOf(radioOptions[0]) }
+    Column {
+        Checkbox(checked = checkedState, onCheckedChange = { checkedState = it })
+        TriStateCheckbox(
+            state = triState,
+            onClick = {
+                triState = if (triState == ToggleableState.On) ToggleableState.Indeterminate
+                else if (triState == ToggleableState.Indeterminate) ToggleableState.Off
+                else ToggleableState.On
+            }
+        )
+        radioOptions.forEach {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(selected = selectedOption == it, onClick = { selectedOption = it })
+                Text(text = it)
+            }
+        }
+    }
+}
+// No.21 end
+
 // https://m3.material.io/components
 
 @Preview(showBackground = true)
@@ -1264,7 +1296,20 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting20("Android", modifier = Modifier)
+            Greeting21("Android", modifier = Modifier)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview2() {
+    JetpackComposeBasicTheme(darkTheme = true) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Greeting21("Android", modifier = Modifier)
         }
     }
 }
