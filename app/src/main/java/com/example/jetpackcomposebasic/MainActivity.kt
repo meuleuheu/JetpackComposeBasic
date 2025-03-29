@@ -1,5 +1,6 @@
 package com.example.jetpackcomposebasic
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -16,7 +17,6 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -60,21 +59,16 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.sharp.Delete
-import androidx.compose.material.icons.sharp.Favorite
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -90,7 +84,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -124,7 +117,6 @@ import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TriStateCheckbox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberTimePickerState
@@ -141,13 +133,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -170,24 +159,27 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.jetpackcomposebasic.ui.theme.JetpackComposeBasicTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
 import java.util.Timer
 import java.util.TimerTask
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             JetpackComposeBasicTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    Navigation()
                 }
             }
         }
@@ -1336,6 +1328,69 @@ fun Greeting22(name: String, modifier: Modifier) {
 }
 // No.22 end
 
+// No.23
+sealed class Screen(val route: String, val title: String) {
+    object Home : Screen("home", "Home")
+    object Detail : Screen("detail", "Detail")
+}
+
+@Composable
+fun Navigation() {
+    val navController = rememberNavController()
+
+    //scaffold check back navController.previousBackStackEntry != null
+
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
+        composable(Screen.Home.route) {
+            HomeScreen2(navController, it.savedStateHandle.get<String>("result"))
+        }
+        // advanced: using json (send object) + base64 (prevent '/' in route)
+        composable(
+            Screen.Detail.route + "/{arg1}/{arg2}",
+            arguments = listOf(
+                navArgument("arg1") { type = NavType.StringType },
+                navArgument("arg2") { type = NavType.StringType }
+            )
+        ) { entry ->
+            DetailScreen2(
+                navController,
+                entry.arguments?.getString("arg1"),
+                entry.arguments?.getString("arg2")
+            )
+        }
+    }
+}
+
+@Composable
+fun HomeScreen2(navController: NavHostController, result: String?) {
+    Column {
+        Text(text = "Return result = $result")
+        TextButton(onClick = { navController.navigate("${Screen.Detail.route}/A/aa") }) {
+            Text(text = "A")
+        }
+        TextButton(onClick = { navController.navigate("${Screen.Detail.route}/B/cde")}) {
+            Text(text = "B")
+        }
+    }
+}
+
+@Composable
+fun DetailScreen2(navController: NavHostController, arg1: String?, arg2: String?) {
+    Column {
+        Text(text = "arg1 = $arg1")
+        Text(text = "arg2 = $arg2")
+        TextButton(
+            onClick = {
+                navController.previousBackStackEntry?.savedStateHandle?.set("result", "$arg2/$arg1")
+                navController.popBackStack()
+            }
+        ) {
+            Text(text = "Back")
+        }
+    }
+}
+// No.23 end
+
 // https://m3.material.io/components
 
 @Preview(showBackground = true)
@@ -1346,7 +1401,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting22("Android", modifier = Modifier)
+            Navigation()
         }
     }
 }
