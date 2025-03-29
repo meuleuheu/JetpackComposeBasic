@@ -107,6 +107,11 @@ import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -1286,6 +1291,51 @@ fun Greeting21(name: String, modifier: Modifier) {
 }
 // No.21 end
 
+// No.22
+@Composable
+fun Greeting22(name: String, modifier: Modifier) {
+    var scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+    var r by remember { mutableStateOf("") }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState) { data ->
+                Snackbar(
+                    containerColor = Color.DarkGray,
+                    snackbarData = data
+                )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    scope.launch {
+                        var result = snackBarHostState.showSnackbar(
+                            message = "To use this function, turn on permission in Settings",
+                            actionLabel = "Settings",
+                            withDismissAction = true,       // button close
+                            duration = SnackbarDuration.Long
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            // click to Settings
+                            r = "Action click"
+                        } else {
+                            r = "Dismiss"
+                        }
+                    }
+                }
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
+        }
+    ) {
+        Column(Modifier.padding(it)) {
+            Text(text = r)
+        }
+    }
+}
+// No.22 end
+
 // https://m3.material.io/components
 
 @Preview(showBackground = true)
@@ -1296,7 +1346,7 @@ fun GreetingPreview() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting21("Android", modifier = Modifier)
+            Greeting22("Android", modifier = Modifier)
         }
     }
 }
